@@ -1,0 +1,109 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #03193f;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* ===== ADDED (does NOT change layout) ===== */
+
+/* Scroll animation */
+.fade-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+}
+
+.fade-section.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Step styling */
+.step-box {
+    padding: 10px 15px;
+    margin: 8px 0;
+    background: #f4f6fb;
+    border-left: 4px solid #03193f;
+    border-radius: 5px;
+}
+
+/* Link styling (only affects links inside content) */
+.content-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 18px;
+    background: #03193f;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+.content-link:hover {
+    background: #0a2d73;
+}
+</style>
+
+<div style="max-width:900px;margin:auto;padding:30px;">
+
+    <h2 style="color:#03193f;">{{ section_title }}</h2>
+    <hr>
+
+    {% if infos %}
+        {% for item in infos %}
+            <div style="margin-bottom:25px;padding:20px;background:white;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.08);">
+                <h3>{{ item.title }}</h3>
+
+                {{ item.content|safe }}
+
+                <small style="color:#888;">
+                    Last updated: {{ item.last_updated|date:"d M Y" }}
+                </small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No information available yet.</p>
+    {% endif %}
+
+</div>
+
+<!-- Scroll animation script -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const sections = document.querySelectorAll('.fade-section');
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+});
+</script>
+
+{% endblock %}

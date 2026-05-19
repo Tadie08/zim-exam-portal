@@ -1,0 +1,101 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .header {
+        background-color: #03193f;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+    }
+
+    .logo {
+        height: 42px;
+        margin-right: 15px;
+    }
+
+    .title {
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        margin-top: 40px;
+    }
+
+    .info-card {
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(12px);
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+    }
+
+    .info-card h3 {
+        margin-top: 0;
+        color: #03193f;
+    }
+
+    .info-card p {
+        color: #333;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<h1>Welcome to the ZIMSEC Digital Resources Platform</h1>
+<p>
+    Official public access to syllabus, past papers, and examination information.
+</p>
+
+<div class="info-grid">
+
+    <div class="info-card">
+        <h3>About ZIMSEC</h3>
+        <p>
+            Learn more about the Zimbabwe School Examinations Council and its national role.
+        </p>
+    </div>
+
+    <div class="info-card">
+        <h3>Public Announcements</h3>
+        <p>
+            Official updates, notices, and examination-related announcements.
+        </p>
+    </div>
+
+    <div class="info-card">
+        <h3>Health & Safety Notices</h3>
+        <p>
+            Important examination health and safety guidance for candidates and schools.
+        </p>
+    </div>
+
+    <div class="info-card">
+        <h3>Candidate Support</h3>
+        <p>
+            Information on registration, results access, and candidate assistance.
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

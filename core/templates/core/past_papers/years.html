@@ -1,0 +1,208 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<style>
+.page-wrapper {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+    font-weight: 600;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 30px;
+}
+
+.year-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.year-pill {
+    padding: 9px 16px;
+    border-radius: 6px;
+    background: #de547d;
+    color: #f8fafc;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.year-pill:hover,
+.year-pill.active {
+    background: #e64c82;
+}
+
+.year-section {
+    margin-bottom: 40px;
+}
+
+.year-title {
+    font-size: 19px;
+    font-weight: 900;
+    color: #03193f;
+    margin-bottom: 18px;
+}
+
+.session-wrapper {
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.session-card {
+    padding: 18px 22px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    font-weight: 800;
+    font-size: 15px;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+.session-card.june {
+    border-left: 6px solid #1e3a8a;
+}
+
+.session-card.nov {
+    border-left: 6px solid #7f1d1d;
+}
+
+.session-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    background: #ffffff;
+}
+
+.session-card span {
+    font-size: 18px;
+    opacity: 0.5;
+}
+
+.sidebar .side-card {
+    padding: 22px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ffffff40, #ffffff10);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    margin-bottom: 20px;
+}
+
+.sidebar h4 {
+    margin-top: 0;
+    font-weight: 800;
+    color: #03193f;
+}
+
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    .session-wrapper {
+        max-width: 100%;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+
+    <h2 style="font-weight:900;">
+        {{ subject.name }} – {{ level_name|upper }} Past Papers
+    </h2>
+
+    <div class="content-grid">
+
+        <div>
+
+            <div class="year-filter" id="yearFilter">
+                <div class="year-pill active" data-year="all">ALL YEARS</div>
+                {% for year in years %}
+                    <div class="year-pill" data-year="{{ year }}">
+                        {{ year|stringformat:"s"|slice:"-2:" }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="yearsContainer">
+
+                {% for year in years %}
+                <div class="year-section" data-year="{{ year }}">
+
+                    <div class="year-title">{{ year }}</div>
+
+                    <div class="session-wrapper">
+
+                        <a href="{% url 'past_paper_papers' level_name subject.id year 'June' %}"
+                           class="session-card june">
+                            JUNE SESSION
+                            <span>›</span>
+                        </a>
+
+                        <a href="{% url 'past_paper_papers' level_name subject.id year 'Nov' %}"
+                           class="session-card nov">
+                            NOVEMBER SESSION
+                            <span>›</span>
+                        </a>
+
+                    </div>
+
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="sidebar">
+
+            <div class="side-card">
+                <h4>📢 UPDATES</h4>
+                <p><b>16/01/2025</b><br>Grade 7 2024 papers uploaded.</p>
+            </div>
+
+            <div class="side-card">
+                <h4>📌 SPONSORED</h4>
+                <p>Advert space for tutors & schools</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+const pills = document.querySelectorAll(".year-pill");
+const years = document.querySelectorAll(".year-section");
+
+pills.forEach(pill => {
+    pill.addEventListener("click", () => {
+        pills.forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+
+        const year = pill.dataset.year;
+
+        years.forEach(sec => {
+            sec.style.display =
+                year === "all" || sec.dataset.year === year
+                ? "block"
+                : "none";
+        });
+    });
+});
+</script>
+
+{% endblock %}

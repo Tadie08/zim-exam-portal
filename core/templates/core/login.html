@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login | ZIMSEC Portal</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f1f5f9;
+}
+
+.login-wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+.login-form {
+    width: 40%;
+    background: #ffffff;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo-box {
+    width: 140px;
+    height: 140px;
+    background: white;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.logo-box img {
+    max-width: 100px;
+    height: auto;
+}
+
+.login-form h2 {
+    margin-bottom: 10px;
+    color: #03193f;
+}
+
+.login-form p {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+    color: #475569;
+}
+
+.login-btn {
+    background: #03193f;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.login-btn:hover {
+    background: #04245c;
+}
+
+.signup-link {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+}
+
+.signup-link a {
+    color: #03193f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.login-image {
+    width: 60%;
+    background: url("{% static 'images/school_bg.jpg' %}") center/cover no-repeat;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 25, 63, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
+
+.overlay h1 {
+    font-size: 32px;
+    max-width: 500px;
+}
+
+@media (max-width: 900px) {
+    .login-wrapper {
+        flex-direction: column;
+    }
+    .login-form, .login-image {
+        width: 100%;
+    }
+    .login-image {
+        height: 250px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+    <div class="login-form">
+        <div class="logo-box">
+            <img src="{% static 'images/zimsec_logo.png' %}" alt="ZIMSEC Logo">
+        </div>
+
+        <h2>Welcome Back 👋</h2>
+        <p>Please login to your account</p>
+
+        {% if form.errors %}
+        <div class="error-message">
+            Invalid username or password. Please try again.
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next|default:'/dashboard/' }}">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <div class="remember">
+                <input type="checkbox" name="remember" id="remember">
+                <label for="remember" style="margin:0; font-weight:normal;">Remember me</label>
+            </div>
+
+            <button class="login-btn" type="submit">Login</button>
+
+            <div style="text-align: center; margin-top: 15px;">
+              <a href="{% url 'password_reset' %}" style="color: #64748b; text-decoration: none; font-size: 14px;">Forgot password?</a>
+           </div>
+        </form>
+
+        <div class="signup-link">
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+        </div>
+    </div>
+
+    <div class="login-image">
+        <div class="overlay">
+            <h1>ZIMSEC Digital Resources Portal</h1>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

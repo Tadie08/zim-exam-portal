@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+{% block content %}
+
+<h2>{{ subject.name }} – {{ year }}</h2>
+
+<div class="subjects-grid">
+    {% for session in sessions %}
+        <a href="{% url 'past_paper_papers' level_name subject.id year session %}"
+           class="subject-card">
+            {{ session }} Session
+        </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

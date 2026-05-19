@@ -1,0 +1,213 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+.page-wrapper {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 30px;
+}
+
+/* LEVEL SELECTOR */
+.level-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.level-btn {
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.level-btn.active {
+    background: #03193f;
+    color: white;
+}
+
+.level-btn:not(.active) {
+    background: rgba(255,255,255,0.3);
+    color: #03193f;
+}
+
+.level-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* SEARCH */
+.search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 35px;
+}
+
+.search-box input {
+    width: 60%;
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 14px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* SUBJECTS GRID */
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 22px;
+}
+
+.subject-card {
+    padding: 22px;
+    text-align: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: all 0.35s ease;
+}
+
+.subject-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+}
+
+.subject-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #03193f;
+}
+
+/* BUTTONS */
+.browse-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    font-size: 13px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    background: #03193f;
+    transition: all 0.25s ease;
+    font-weight: bold;
+}
+
+.browse-btn:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    background: #04245c;
+    margin-top: 10px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.side-card {
+    padding: 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff40, #ffffff10);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.side-card h4 {
+    margin-top: 0;
+    color: #03193f;
+}
+
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    .search-box input {
+        width: 90%;
+    }
+    .level-selector {
+        flex-wrap: wrap;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+
+    <!-- TITLE -->
+    <h1 style="text-align: center; color: #03193f; margin-bottom: 10px;">📄 Past Papers</h1>
+    <p style="text-align: center; color: #64748b; margin-bottom: 30px;">Previous examination papers</p>
+
+    <!-- LEVEL SELECTOR -->
+    <div class="level-selector">
+        <a href="{% url 'past_paper_subjects' 'grade7' %}" class="level-btn {% if level_name == 'grade7' %}active{% endif %}">Grade 7</a>
+        <a href="{% url 'past_paper_subjects' 'olevel' %}" class="level-btn {% if level_name == 'olevel' %}active{% endif %}">O'Level</a>
+        <a href="{% url 'past_paper_subjects' 'alevel' %}" class="level-btn {% if level_name == 'alevel' %}active{% endif %}">A'Level</a>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+        <input type="text" id="subjectSearch" placeholder="Search {{ level_name }} subject...">
+    </div>
+
+    <div class="content-grid">
+
+        <!-- SUBJECTS -->
+        <div class="subjects-grid" id="subjectsGrid">
+            {% for subject in subjects %}
+                <div class="subject-card" data-name="{{ subject.name|lower }}">
+                    <h3>{{ subject.name }}</h3>
+                    <a href="{% url 'past_paper_years' level_name subject.id %}" class="browse-btn">
+                        Browse Papers
+                    </a>
+                </div>
+            {% empty %}
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
+                    <p>No subjects found for this level.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="side-card">
+                <h4>📘 Exam Tips</h4>
+                <p>Practice with past papers to improve your grades.</p>
+            </div>
+
+            <div class="side-card">
+                <h4>⚠️ Important</h4>
+                <p>Always check the syllabus before attempting past papers.</p>
+                <a href="{% url 'syllabus' level_name %}" style="color: #03193f; font-weight: bold;">View Syllabus →</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.getElementById("subjectSearch").addEventListener("keyup", function () {
+    const value = this.value.toLowerCase();
+    document.querySelectorAll(".subject-card").forEach(card => {
+        card.style.display = card.dataset.name.includes(value) ? "block" : "none";
+    });
+});
+</script>
+
+{% endblock %}

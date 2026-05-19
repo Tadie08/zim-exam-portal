@@ -1,0 +1,185 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+.page-wrapper {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 30px;
+}
+
+/* SEARCH */
+.search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 35px;
+}
+
+.search-box input {
+    width: 60%;
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 14px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* PAPERS GRID */
+.papers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+}
+
+.paper-card {
+    padding: 22px;
+    text-align: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: all 0.35s ease;
+}
+
+.paper-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+}
+
+.paper-card h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #03193f;
+}
+
+/* BUTTONS */
+.paper-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.paper-actions a {
+    padding: 6px 14px;
+    font-size: 13px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.25s ease;
+}
+
+.paper-actions a:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.view-btn {
+    background: #03193f;
+}
+
+.download-btn {
+    background: #1e90ff;
+}
+
+/* SIDEBAR */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.side-card {
+    padding: 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff40, #ffffff10);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    .search-box input {
+        width: 90%;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+
+    <!-- PAGE TITLE -->
+    <h2 style="text-align:center;margin-bottom:20px;">
+        {{ subject.name }} – {{ year }} {{ session }}
+    </h2>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+        <input type="text" id="paperSearch" placeholder="Search paper...">
+    </div>
+
+    <div class="content-grid">
+
+        <!-- PAPERS -->
+        <div class="papers-grid" id="papersGrid">
+            {% if papers %}
+                {% for paper in papers %}
+                    <div class="paper-card" data-name="{{ paper.paper_name|lower }}">
+                        <h3>{{ paper.paper_name }}</h3>
+
+                        <div class="paper-actions">
+                            <a href="{{ paper.file.url }}" target="_blank" class="view-btn">
+                                View
+                            </a>
+
+                            <a href="{{ paper.file.url }}" download class="download-btn">
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No papers uploaded for this session.</p>
+            {% endif %}
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="side-card">
+                <h4>📘 Exam Info</h4>
+                <p>{{ subject.name }} Grade 7 past papers.</p>
+            </div>
+
+            <div class="side-card">
+                <h4>⚠️ Tip</h4>
+                <p>Start with Paper 1 before Paper 2.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.getElementById("paperSearch").addEventListener("keyup", function () {
+    const value = this.value.toLowerCase();
+    document.querySelectorAll(".paper-card").forEach(card => {
+        card.style.display = card.dataset.name.includes(value) ? "block" : "none";
+    });
+});
+</script>
+
+{% endblock %}

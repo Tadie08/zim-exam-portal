@@ -1,0 +1,125 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* ---------- HELP PAGE STYLES ---------- */
+.page-wrapper {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.page-title {
+    color: #03193f;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 15px;
+}
+
+.section-title {
+    color: #03193f;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Card Styles */
+.card {
+    display: block;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    border-left: 4px solid #03193f;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.card strong {
+    color: #03193f;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.card p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Info Card (non-clickable) */
+.info-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.info-card p {
+    margin: 10px 0;
+    color: #333;
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 600px) {
+    .page-wrapper {
+        padding: 20px 15px;
+    }
+    
+    .card, .info-card {
+        padding: 20px;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+
+    <h1 class="page-title">Help & Support</h1>
+    <p style="color: #666; margin-bottom: 30px;">Everything you need to know, step by step</p>
+
+    <h2 class="section-title">How to Use the System</h2>
+
+    <div class="info-card">
+        <p>Use the navigation menu to move between pages.</p>
+        <p>All help content is provided through official ZIMSEC information sections.</p>
+    </div>
+
+    <h2 class="section-title">Most Asked Questions</h2>
+
+        <a href="{% url 'zimsec_section' 'registration' %}" class="card">
+        <strong>How to Register for Exams</strong>
+        <p>Step-by-step guide to exam registration.</p>
+    </a>
+
+    <a href="{% url 'zimsec_section' 'results' %}" class="card">
+        <strong>How to Check Results</strong>
+        <p>See how to view and download your results.</p>
+    </a>
+
+    <a href="{% url 'zimsec_section' 'exam_dates' %}" class="card">
+        <strong>Exam Dates</strong>
+        <p>View official exam schedule and timetable.</p>
+    </a>
+
+    <h2 class="section-title">Contact Information</h2>
+
+    <div class="info-card">
+        <p>📧 <strong>Email:</strong> support@example.com</p>
+        <p>📞 <strong>Phone:</strong> +263 00 000 0000</p>
+        <p>⏰ <strong>Office Hours:</strong> Monday – Friday (8AM – 4PM)</p>
+    </div>
+
+</div>
+
+{% endblock %}

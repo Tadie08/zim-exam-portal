@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>Welcome, {{ user.username }}! 👋</h1>
+    <p>You are logged in as a <strong>Student</strong></p>
+    
+    <div class="dashboard-grid">
+        <div class="card">
+            <div class="card-content">
+                <h3>📚 My Subjects</h3>
+                <p>View your enrolled subjects</p>
+            </div>
+            <a href="{% url 'home' %}" class="card-btn">Browse Subjects</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-content">
+                <h3>📝 Saved Notes</h3>
+                <p>Access your saved study materials</p>
+            </div>
+            <a href="#" class="card-btn">View Saved</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-content">
+                <h3>📖 Textbooks</h3>
+                <p>Access premium textbooks</p>
+            </div>
+            <a href="#" class="card-btn">Browse Textbooks</a>
+        </div>
+        
+        <div class="card locked">
+            <div class="card-content">
+                <h3>⭐ Premium Tutors</h3>
+                <p>Subscribe to access tutor videos and notes</p>
+            </div>
+            <a href="#" class="card-btn subscribe-btn">Subscribe Now</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; /* Fixed height for alignment */
+}
+.card-content {
+    padding: 25px;
+    flex-grow: 1; /* Pushes button to bottom */
+}
+.card h3 {
+    margin-top: 0;
+    color: #03193f;
+}
+.card p {
+    color: #64748b;
+}
+.card-btn {
+    display: block;
+    padding: 12px 20px;
+    background: #03193f;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    margin: 0 25px 25px 25px; /* Bottom margin only */
+    border-radius: 6px;
+    font-weight: bold;
+}
+.card-btn:hover {
+    background: #04245c;
+}
+.card.locked {
+    opacity: 0.9;
+    background: #f8fafc;
+}
+.subscribe-btn {
+    background: #dc2626 !important;
+}
+.subscribe-btn:hover {
+    background: #b91c1c !important;
+}
+</style>
+{% endblock %}

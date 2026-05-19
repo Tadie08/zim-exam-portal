@@ -1,0 +1,372 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Welcome Header (like dashboard) -->
+    <div class="welcome-header">
+        <h1>Welcome, {{ user.username }}! 👋</h1>
+        <p>You are logged in as a <strong>{{ profile.get_role_display }}</strong></p>
+    </div>
+
+    <!-- Profile Info Cards -->
+    <div class="profile-grid">
+        <!-- Personal Info Card -->
+        <div class="profile-card">
+            <div class="card-header">
+                <div class="avatar">👤</div>
+                <div class="user-details">
+                    <h2>{{ user.username }}</h2>
+                    <span class="role-badge">{{ profile.get_role_display }}</span>
+                    <p class="email">{{ user.email }}</p>
+                </div>
+            </div>
+            
+            <div class="card-content">
+                <h3>📝 Edit Profile</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="form-group">
+                        <label>School:</label>
+                        {{ form.school }}
+                    </div>
+                    <div class="form-group">
+                        <label>Bio:</label>
+                        {{ form.bio }}
+                    </div>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Account Security Card -->
+        <div class="profile-card">
+            <div class="card-content">
+                <h3>🔒 Account Security</h3>
+                <ul class="security-list">
+                    <li>
+                        <div class="info">
+                            <strong>Password</strong>
+                            <small>Last changed: {{ user.last_login|date:"M d, Y"|default:"Never" }}</small>
+                        </div>
+                        <a href="{% url 'password_reset' %}" class="btn-secondary">Change</a>
+                    </li>
+                    <li>
+                        <div class="info">
+                            <strong>Security Question</strong>
+                            <small>{% if profile.security_answer_hash %}Set{% else %}Not Set{% endif %}</small>
+                        </div>
+                        <span class="status {% if profile.security_answer_hash %}active{% else %}inactive{% endif %}">
+                            {% if profile.security_answer_hash %}✓{% else %}✗{% endif %}
+                        </span>
+                    </li>
+                    <li>
+                        <div class="info">
+                            <strong>Last Login</strong>
+                            <small>{{ user.last_login|date:"M d, Y, g:i a"|default:"Never" }}</small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Subscription Card -->
+        <div class="profile-card">
+            <div class="card-content">
+                <h3>⭐ Subscription</h3>
+                {% if profile.is_subscribed %}
+                    <div class="subscription-status active">
+                        <div class="status-icon">✅</div>
+                        <div class="status-info">
+                            <strong>Active</strong>
+                            <p>Until {{ profile.subscription_expiry|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-primary">Manage Subscription</a>
+                {% else %}
+                    <div class="subscription-status inactive">
+                        <div class="status-icon">❌</div>
+                        <div class="status-info">
+                            <strong>Not Subscribed</strong>
+                            <p>Subscribe to access tutor videos and premium notes!</p>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-primary subscribe-btn">Subscribe Now</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- My Resources Card -->
+        <div class="profile-card">
+            <div class="card-content">
+                <h3>📚 My Resources</h3>
+                <div class="resource-links">
+                    <a href="#" class="resource-item">
+                        <span>📝 Saved Notes</span>
+                        <span class="count">0</span>
+                    </a>
+                    <a href="#" class="resource-item">
+                        <span>📄 Downloaded Papers</span>
+                        <span class="count">0</span>
+                    </a>
+                    <a href="#" class="resource-item">
+                        <span>🔖 Bookmarked Topics</span>
+                        <span class="count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Welcome Header */
+.welcome-header {
+    margin-bottom: 30px;
+}
+.welcome-header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #1e293b;
+}
+.welcome-header p {
+    color: #64748b;
+    font-size: 18px;
+}
+.welcome-header strong {
+    color: #03193f;
+}
+
+/* Profile Grid */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Profile Cards */
+.profile-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #03193f 0%, #04245c 100%);
+    color: white;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.user-details h2 {
+    margin: 0 0 5px 0;
+    font-size: 24px;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.email {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.card-content {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h3 {
+    margin: 0 0 20px 0;
+    color: #03193f;
+    font-size: 18px;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 10px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #475569;
+    font-weight: 600;
+    font-size: 14px;
+}
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Buttons */
+.btn-primary {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #03193f;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    margin-top: auto;
+}
+.btn-primary:hover {
+    background: #04245c;
+}
+.btn-secondary {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #e5e7eb;
+    color: #03193f;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.subscribe-btn {
+    background: #dc2626 !important;
+}
+.subscribe-btn:hover {
+    background: #b91c1c !important;
+}
+
+/* Security List */
+.security-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.security-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+.security-list li:last-child {
+    border-bottom: none;
+}
+.info strong {
+    display: block;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+.info small {
+    color: #64748b;
+    font-size: 12px;
+}
+.status {
+    font-size: 20px;
+}
+.status.active {
+    color: #10b981;
+}
+.status.inactive {
+    color: #dc2626;
+}
+
+/* Subscription Status */
+.subscription-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 12px;
+}
+.subscription-status.active {
+    background: #d1fae5;
+}
+.subscription-status.inactive {
+    background: #fee2e2;
+}
+.status-icon {
+    font-size: 30px;
+}
+.status-info strong {
+    display: block;
+    color: #1e293b;
+}
+.status-info p {
+    margin: 5px 0 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* Resource Links */
+.resource-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.resource-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #1e293b;
+    transition: background 0.2s;
+}
+.resource-item:hover {
+    background: #e5e7eb;
+}
+.count {
+    background: #03193f;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+</style>
+{% endblock %}

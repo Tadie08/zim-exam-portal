@@ -1,0 +1,15 @@
+.logo-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.logo-box img {
+    max-width: 140px;
+    height: auto;
+    object-fit: contain;
+}

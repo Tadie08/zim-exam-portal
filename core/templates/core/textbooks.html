@@ -1,0 +1,302 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+.page-wrapper {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 30px;
+}
+
+.level-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.level-btn {
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.level-btn.active {
+    background: #03193f;
+    color: white;
+}
+
+.level-btn:not(.active) {
+    background: rgba(255,255,255,0.3);
+    color: #03193f;
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 35px;
+}
+
+.search-box input {
+    width: 60%;
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 14px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+}
+
+.subject-card {
+    padding: 22px;
+    text-align: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: all 0.35s ease;
+}
+
+.subject-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+}
+
+.subject-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #03193f;
+}
+
+.book-list {
+    text-align: left;
+    margin: 10px 0;
+}
+
+.book-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 8px;
+}
+
+.book-title {
+    font-weight: bold;
+    color: #03193f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.book-author {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.book-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #dc2626;
+    margin-bottom: 8px;
+}
+
+.book-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.purchase-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    background: #dc2626;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.purchase-btn:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.download-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    background: #10b981;
+    font-weight: bold;
+    transition: all 0.25s ease;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.owned-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #10b981;
+    color: white;
+    font-size: 11px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+
+.no-books {
+    font-size: 13px;
+    color: #999;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.side-card {
+    padding: 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff40, #ffffff10);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.side-card h4 {
+    margin-top: 0;
+    color: #03193f;
+}
+
+.cart-summary {
+    background: #03193f;
+    color: white;
+}
+
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    .search-box input {
+        width: 90%;
+    }
+    .level-selector {
+        flex-wrap: wrap;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+
+    <h1 style="text-align: center; color: #03193f; margin-bottom: 10px;">📚 Textbooks</h1>
+    <p style="text-align: center; color: #64748b; margin-bottom: 30px;">Premium textbooks for purchase</p>
+
+    <!-- LEVEL SELECTOR -->
+    <div class="level-selector">
+        <a href="{% url 'textbooks' %}?level=grade7" class="level-btn {% if current_level == 'grade7' %}active{% endif %}">Grade 7</a>
+        <a href="{% url 'textbooks' %}?level=olevel" class="level-btn {% if current_level == 'olevel' %}active{% endif %}">O'Level</a>
+        <a href="{% url 'textbooks' %}?level=alevel" class="level-btn {% if current_level == 'alevel' %}active{% endif %}">A'Level</a>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+        <input type="text" id="subjectSearch" placeholder="Search {{ level_name }} subject...">
+    </div>
+
+    <div class="content-grid">
+
+        <!-- SUBJECTS -->
+        <div class="subjects-grid" id="subjectsGrid">
+            {% for item in subject_books %}
+                <div class="subject-card" data-name="{{ item.subject.name|lower }}">
+                    <h3>{{ item.subject.name }}</h3>
+                    
+                    {% if item.books %}
+                        {% for book_info in item.books %}
+                            <div class="book-item">
+                                <div class="book-title">{{ book_info.book.title }}</div>
+                                <div class="book-author">by {{ book_info.book.author|default:"Unknown" }}</div>
+                                <div class="book-price">${{ book_info.book.price }}</div>
+                                
+                                <div class="book-actions">
+                                    {% if book_info.is_purchased %}
+                                        <span class="owned-badge">✓ Owned</span>
+                                        <a href="{{ book_info.book.file.url }}" download class="download-btn">Download</a>
+                                    {% else %}
+                                        <form method="post" action="{% url 'purchase_textbook' book_info.book.id %}" style="margin:0;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="purchase-btn">Purchase</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-books">No textbooks available</p>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
+                    <p>No subjects found for this level.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="side-card cart-summary">
+                <h4>🛒 Your Library</h4>
+                <p>View all your purchased textbooks in your profile.</p>
+                <a href="{% url 'profile' %}" style="color: white; font-weight: bold;">Go to Profile →</a>
+            </div>
+
+            <div class="side-card">
+                <h4>💳 Payment Info</h4>
+                <p>Secure payments processed instantly. All sales are final.</p>
+            </div>
+
+            <div class="side-card">
+                <h4>📝 Free Notes</h4>
+                <p>Looking for free resources? Check our topical notes.</p>
+                <a href="{% url 'topical_notes' %}" style="color: #03193f; font-weight: bold;">View Notes →</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.getElementById("subjectSearch").addEventListener("keyup", function () {
+    const value = this.value.toLowerCase();
+    document.querySelectorAll(".subject-card").forEach(card => {
+        card.style.display = card.dataset.name.includes(value) ? "block" : "none";
+    });
+});
+</script>
+
+{% endblock %}
